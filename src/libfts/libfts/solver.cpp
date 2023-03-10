@@ -1,9 +1,9 @@
 #include <libfts/solver.hpp>
 
-namespace solver {
+namespace fts {
 
     double sum(double first, double second) {
         return (first + second);
     }
 
-}  // namespace solver
+}  // namespace fts
