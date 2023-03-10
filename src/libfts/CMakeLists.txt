@@ -1,4 +1,4 @@
-set(target_name solver)
+set(target_name fts)
 
 add_library(${target_name} STATIC
 	libfts/solver.cpp)
