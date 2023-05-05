@@ -1,6 +1,6 @@
-#include <libfts/solver.hpp>
-#include <libfts/parser.hpp>
 #include <CLI/CLI.hpp>
+#include <libfts/parser.hpp>
+#include <libfts/solver.hpp>
 
 #include <iostream>
 
@@ -20,15 +20,14 @@
 //     return 0;
 // }
 
-int main()
-{
+int main() {
     std::string orig = "Dr. Jekyll and Mr. Hyde";
     std::vector<prsr::ngrams> out;
 
     prsr::config config;
     config.stop_words = {
         "a",   "an",    "and",  "are",   "as",    "at",   "be",   "but",
-        "by",  "for",   "if",   "in",    "into",  "is",   "i t",   "no",
+        "by",  "for",   "if",   "in",    "into",  "is",   "it",   "no",
         "not", "of",    "on",   "or",    "s",     "such", "t",    "that",
         "the", "their", "then", "there", "these", "they", "this", "to",
         "was", "will",  "with", "dr",    "mr"};
@@ -36,7 +35,7 @@ int main()
     config.max_ngram_length = 6;
 
     prsr::parser(orig, config, out);
-    for(auto i = out.begin(); i != out.end(); i++)
-        std::cout << i->word << " " << i->token_index << " " ;
+    for (auto i = out.begin(); i != out.end(); i++)
+        std::cout << i->word << " " << i->token_index << " ";
     std::cout << std::endl;
-} 
+}
