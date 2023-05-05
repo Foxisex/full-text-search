@@ -1,24 +1,7 @@
 #include <CLI/CLI.hpp>
+#include <iostream>
 #include <libfts/parser.hpp>
 #include <libfts/solver.hpp>
-
-#include <iostream>
-
-// int main(int argc, char** argv) {
-//     CLI::App app{"App description"};
-
-//     double first_operand = 0;
-//     double second_operand = 0;
-
-//     app.add_option("--first", first_operand, "First");
-//     app.add_option("--second", second_operand, "Second");
-
-//     CLI11_PARSE(app, argc, argv);
-//     double result = fts::sum(first_operand, second_operand);
-//     std::cout << result << std::endl;
-
-//     return 0;
-// }
 
 int main() {
     std::string orig = "Dr. Jekyll and Mr. Hyde";
@@ -35,7 +18,8 @@ int main() {
     config.max_ngram_length = 6;
 
     prsr::parser(orig, config, out);
-    for (auto i = out.begin(); i != out.end(); i++)
-        std::cout << i->word << " " << i->token_index << " ";
+    for (auto& ngram : out) {
+        std::cout << ngram.word << " " << ngram.token_index << " ";
+    }
     std::cout << std::endl;
 }
