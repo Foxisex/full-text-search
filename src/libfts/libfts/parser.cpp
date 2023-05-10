@@ -6,6 +6,7 @@ namespace prsr {
         return static_cast<bool>(
             std::ispunct(static_cast<unsigned char>(symbol)));
     }
+    // vec.emplace_back(str.begin, str.end)
 
     void str_to_words(
         std::string& origin,
@@ -17,20 +18,23 @@ namespace prsr {
         while ((begin = origin.find_first_not_of(delim, end)) !=
                std::string::npos) {
             end = origin.find(delim, begin);
-            result_vec.push_back(origin.substr(begin, end - begin));
+            result_vec.emplace_back(origin.substr(begin, end - begin));
         }
     }
 
     void rm_stop_words(
         std::vector<std::string>& result_vec,
         const std::vector<std::string>& stop_words) {
-        for (const auto& vElement : stop_words) {
+        std::vector<std::string> tmp_vec;
+
+        for (const auto& vElement : result_vec) {
             auto index =
-                std::find(result_vec.begin(), result_vec.end(), vElement);
-            if (index != result_vec.end()) {
-                result_vec.erase(index);
+                std::find(stop_words.begin(), stop_words.end(), vElement);
+            if (index == stop_words.end()) {  // annorted ?? vector
+                tmp_vec.emplace_back(vElement);
             }
         }
+        result_vec = tmp_vec;
     }
 
     void generate_ngrams(
@@ -40,11 +44,11 @@ namespace prsr {
         int index = 0;
         for (const auto& word : words) {
             if (word.length() >= static_cast<unsigned>(cfg.min_ngram_length)) {
-                for (auto i = cfg.min_ngram_length; i <= cfg.max_ngram_length;
+                for (auto i = cfg.min_ngram_length; i <=
+                     std::min(cfg.max_ngram_length,
+                              static_cast<int>(word.length()));
                      i++) {
-                    if (static_cast<int>(word.length()) >= i) {
-                        parsed_vec.push_back({word.substr(0, i), index});
-                    }
+                    parsed_vec.push_back({word.substr(0, i), index});
                 }
             }
             index++;
@@ -57,8 +61,9 @@ namespace prsr {
         std::vector<prsr::ngrams>& parsed_vec) {
         std::string origin_copy(origin);
 
-        static_cast<void>(
-            std::remove_if(origin_copy.begin(), origin_copy.end(), my_ispunct));
+        origin_copy.erase(
+            std::remove_if(origin_copy.begin(), origin_copy.end(), my_ispunct),
+            origin_copy.end());
 
         std::transform(
             origin_copy.begin(),

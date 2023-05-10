@@ -46,10 +46,8 @@ TEST(TestPARSER, generateNgrams) {
         {"jekyl", 0},
         {"jekyll", 0},
         {"hyd", 1},
-        {"hyde", 1},
-        {"hyded", 1},
-        {"hydede", 1}};
-    std::vector<std::string> words = {"jekyll", "hydede"};
+        {"hyde", 1}};
+    std::vector<std::string> words = {"jekyll", "hyde"};
     std::vector<prsr::ngrams> out;
     prsr::config cfg;
     cfg.min_ngram_length = 3;
@@ -69,9 +67,7 @@ TEST(TestPARSER, parser) {
         {"jekyl", 0},
         {"jekyll", 0},
         {"hyd", 1},
-        {"hyde", 1},
-        {"hyded", 1},
-        {"hydede", 1}};
+        {"hyde", 1}};
     std::string original_str = "Dr. Jekyll and Mr. Hyde";
     std::vector<prsr::ngrams> out;
     prsr::config config;

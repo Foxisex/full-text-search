@@ -4,7 +4,7 @@
 #include <libfts/solver.hpp>
 
 int main() {
-    std::string orig = "Dr. Jekyll and Mr. Hyde";
+    std::string orig = "Dr. Jekyllll and Mr. the the Hyde";
     std::vector<prsr::ngrams> out;
 
     prsr::config config;
