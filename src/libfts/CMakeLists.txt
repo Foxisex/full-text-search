@@ -1,7 +1,8 @@
 set(target_name fts)
 
 add_library(${target_name} STATIC
-	libfts/solver.cpp)
+	libfts/solver.cpp
+	libfts/parser.cpp)
 	
 include(CompileOptions)
 set_compile_options(${target_name})
