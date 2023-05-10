@@ -1,11 +1,12 @@
 #pragma once
 #include <algorithm>
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 
 namespace prsr {
     struct config {
-        std::vector<std::string> stop_words;
+        std::unordered_set<std::string> stop_words;
         int min_ngram_length;
         int max_ngram_length;
     };
@@ -22,7 +23,7 @@ namespace prsr {
         std::vector<std::string>& result_vec);
     void rm_stop_words(
         std::vector<std::string>& result_vec,
-        const std::vector<std::string>& stop_words);
+        const std::unordered_set<std::string>& stop_words);
     void generate_ngrams(
         const std::vector<std::string>& words,
         const prsr::config& cfg,

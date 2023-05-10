@@ -6,7 +6,6 @@ namespace prsr {
         return static_cast<bool>(
             std::ispunct(static_cast<unsigned char>(symbol)));
     }
-    // vec.emplace_back(str.begin, str.end)
 
     void str_to_words(
         std::string& origin,
@@ -24,13 +23,12 @@ namespace prsr {
 
     void rm_stop_words(
         std::vector<std::string>& result_vec,
-        const std::vector<std::string>& stop_words) {
+        const std::unordered_set<std::string>& stop_words) {
         std::vector<std::string> tmp_vec;
 
         for (const auto& vElement : result_vec) {
-            auto index =
-                std::find(stop_words.begin(), stop_words.end(), vElement);
-            if (index == stop_words.end()) {  // annorted ?? vector
+            auto index = stop_words.find(vElement);
+            if (index == stop_words.end()) {
                 tmp_vec.emplace_back(vElement);
             }
         }

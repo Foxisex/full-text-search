@@ -1,7 +1,6 @@
 #include <CLI/CLI.hpp>
 #include <iostream>
 #include <libfts/parser.hpp>
-#include <libfts/solver.hpp>
 
 int main() {
     std::string orig = "Dr. Jekyllll and Mr. the the Hyde";

@@ -19,7 +19,7 @@ TEST(TestPARSER, str2words) {
 }
 
 TEST(TestPARSER, rmStopWords) {
-    const std::vector<std::string> stop_words = {
+    const std::unordered_set<std::string> stop_words = {
         "a",   "an",    "and",  "are",   "as",    "at",   "be",   "but",
         "by",  "for",   "if",   "in",    "into",  "is",   "it",   "no",
         "not", "of",    "on",   "or",    "s",     "such", "t",    "that",
