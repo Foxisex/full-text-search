@@ -16,8 +16,10 @@ Checks: >
   -llvm-include-order,
   -altera-unroll-loops,
   -altera-id-dependent-backward-branch,
+  -altera-struct-pack-align,
   -bugprone-easily-swappable-parameters,
   -cppcoreguidelines-avoid-magic-numbers,
+  
 WarningsAsErrors: true
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
