@@ -30,13 +30,6 @@ int main() {
     builder.add_document(200311, "The Matrix Revolution");
 
     indexer::Index index = builder.index();
-    std::cout << index.entries.size() << std::endl;
-    for (const auto& entrie : index.entries) {
-        std::cout << entrie.first << " " << entrie.second.size() << std::endl;
-        for (const auto& umap : entrie.second) {
-            std::cout << umap.first << std::endl;
-        }
-    }
     indexer::TextIndexWriter writer;
 
     writer.write(std::filesystem::current_path(), index);
