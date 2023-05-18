@@ -2,6 +2,7 @@
 #include <iostream>
 #include <libfts/indexer.hpp>
 #include <libfts/parser.hpp>
+#include <libfts/searcher.hpp>
 
 int main() {
     prsr::config config;
@@ -24,4 +25,8 @@ int main() {
     indexer::TextIndexWriter writer;
 
     writer.write(std::filesystem::current_path(), index);
+    searcher::TextIndexAccessor accessor(config);
+    std::string str = "199903";
+    std::string file = accessor.load_document("199903");
+    std::cout << file << std::endl;
 }
