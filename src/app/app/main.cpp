@@ -18,6 +18,11 @@ int main() {
     indexer::IndexBuilder builder(config);
 
     builder.add_document(199903, "The Matrix");
+    builder.add_document(199904, "The Matrix");
+    builder.add_document(199905, "The Matrix");
+    builder.add_document(199906, "The Matrix");
+    builder.add_document(199907, "The Matrix");
+    builder.add_document(199908, "The Matrix");
     builder.add_document(200305, "The Matrix Reloaded Matrix Matrix matrix");
     builder.add_document(200311, "The Matrix Revolution");
 
@@ -26,10 +31,10 @@ int main() {
 
     writer.write(std::filesystem::current_path(), index);
     searcher::TextIndexAccessor accessor(config);
-    std::string str = "199903";
-    searcher::TermInfos file = accessor.get_term_infos("mat");
-    std::cout << file.term << std::endl;
-    for (const auto& mElement : file.doc_info) {
-        std::cout << mElement.first << " " << mElement.second << std::endl;
+    std::string query = "Hello Matrix";
+    auto result = searcher::search(query, accessor, 8);
+    for (const auto& resElement : result) {
+        std::cout << "doc: " << resElement.doc_id
+                  << " score: " << resElement.score << std::endl;
     }
 }

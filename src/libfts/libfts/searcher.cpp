@@ -6,10 +6,10 @@ namespace searcher {
         std::string result;
         file.open((path + "/docs/" + doc_id + ".txt"));
         if (!file.is_open()) {
-            std::cout << "File is not found!" << std::endl;
-        } else {
-            std::getline(file, result);
+            return result;
         }
+        std::getline(file, result);
+
         file.close();
         return result;
     }
@@ -24,7 +24,7 @@ namespace searcher {
             path + "/entries/" +
             std::string(hash_term.begin(), hash_term.begin() + 6) + ".txt");
         if (!file.is_open()) {
-            std::cout << "File is not found!" << std::endl;
+            return term_infos;
         }
 
         for (std::string read_line; std::getline(file, read_line);) {
@@ -62,6 +62,38 @@ namespace searcher {
 
         file.close();
         return term_infos;
+    }
+
+    std::set<Result> search(
+        const std::string& query,
+        TextIndexAccessor& accessor,
+        double doc_count) {
+        std::vector<prsr::ngrams> query_ngrams;
+        prsr::parser(query, accessor.cfg, query_ngrams);
+        std::vector<TermInfos> term_infos;
+        std::set<Result> result;
+        for (const auto& query_ngram : query_ngrams) {
+            TermInfos term_info = accessor.get_term_infos(query_ngram.word);
+            if (!term_info.doc_info.empty()) {
+                term_infos.emplace_back(term_info);
+            }
+        }
+
+        for (const auto& vElement : term_infos) {
+            for (const auto& doc_info_element : vElement.doc_info) {
+                double score = static_cast<double>(doc_info_element.second) *
+                    std::log((doc_count + 1.0) /
+                             static_cast<double>(vElement.doc_info.size()));
+                auto res_found = result.find(doc_info_element.first);
+                if (res_found == result.end()) {
+                    result.emplace(doc_info_element.first, score);
+                } else {
+                    result.erase(res_found);
+                    result.emplace(doc_info_element.first, score);
+                }
+            }
+        }
+        return result;
     }
 
 }  // namespace searcher
