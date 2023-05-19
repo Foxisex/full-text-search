@@ -32,7 +32,7 @@ int main() {
     writer.write(std::filesystem::current_path(), index);
     searcher::TextIndexAccessor accessor(config);
     std::string query = "Hello Matrix";
-    auto result = searcher::search(query, accessor, 8);
+    auto result = searcher::search(query, accessor);
     for (const auto& resElement : result) {
         std::cout << "doc: " << resElement.doc_id
                   << " score: " << resElement.score << std::endl;

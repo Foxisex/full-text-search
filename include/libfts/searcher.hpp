@@ -36,25 +36,27 @@ namespace searcher {
     };
 
     class TextIndexAccessor {
+        friend std::set<Result> search(const std::string&, TextIndexAccessor&);
+
        private:
         std::string path;
+        double doc_count;
+        prsr::config cfg;
 
        public:
-        prsr::config cfg;
+        searcher::TermInfos get_term_infos(const std::string& term);
+        std::string load_document(const std::string& doc_id);
 
         TextIndexAccessor(prsr::config config) {
             path = std::filesystem::current_path();
             path += "/index";
             cfg = config;
+            doc_count = stod(load_document("DocCount"));
         }
-
-        searcher::TermInfos get_term_infos(const std::string& term);
-        std::string load_document(const std::string& doc_id);
     };
 
     std::set<Result> search(
         const std::string& query,
-        TextIndexAccessor& accessor,
-        double doc_count);
+        TextIndexAccessor& accessor);
 
 }  // namespace searcher

@@ -47,6 +47,10 @@ namespace indexer {
             file.close();
         }
 
+        file.open(path + "/index/docs/DocCount.txt");
+        file << index.docs.size();
+        file.close();
+
         for (const auto& entrie : index.entries) {
             std::string hash_ngram;
             picosha2::hash256_hex_string(entrie.first, hash_ngram);

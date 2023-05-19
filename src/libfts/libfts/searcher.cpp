@@ -66,12 +66,12 @@ namespace searcher {
 
     std::set<Result> search(
         const std::string& query,
-        TextIndexAccessor& accessor,
-        double doc_count) {
+        TextIndexAccessor& accessor) {
         std::vector<prsr::ngrams> query_ngrams;
         prsr::parser(query, accessor.cfg, query_ngrams);
         std::vector<TermInfos> term_infos;
         std::set<Result> result;
+
         for (const auto& query_ngram : query_ngrams) {
             TermInfos term_info = accessor.get_term_infos(query_ngram.word);
             if (!term_info.doc_info.empty()) {
@@ -82,7 +82,7 @@ namespace searcher {
         for (const auto& vElement : term_infos) {
             for (const auto& doc_info_element : vElement.doc_info) {
                 double score = static_cast<double>(doc_info_element.second) *
-                    std::log((doc_count + 1.0) /
+                    std::log((accessor.doc_count + 1.0) /
                              static_cast<double>(vElement.doc_info.size()));
                 auto res_found = result.find(doc_info_element.first);
                 if (res_found == result.end()) {
