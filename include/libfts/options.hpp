@@ -3,6 +3,7 @@
 #include <libfts/indexer.hpp>
 #include <libfts/parser.hpp>
 #include <libfts/searcher.hpp>
+// #include <replxx.hxx>
 
 namespace options {
     void indexating(

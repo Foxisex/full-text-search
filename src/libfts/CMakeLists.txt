@@ -22,4 +22,5 @@ target_link_libraries(
 	PRIVATE
 	m
 	csv2
+	replxx
 )

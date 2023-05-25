@@ -7,3 +7,6 @@
 [submodule "external/csv2"]
 	path = external/csv2
 	url = https://github.com/p-ranav/csv2.git
+[submodule "external/replxx"]
+	path = external/replxx
+	url = https://github.com/AmokHuginnsson/replxx.git
