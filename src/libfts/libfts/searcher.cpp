@@ -63,13 +63,21 @@ namespace searcher {
         return term_infos;
     }
 
-    std::set<Result> search(
+    bool stability(const Result& first, const Result& second) {
+        return first.doc_id < second.doc_id;
+    }
+
+    bool more_by_score(const Result& first, const Result& second) {
+        return first.score > second.score;
+    }
+
+    std::vector<Result> search(
         const std::string& query,
         TextIndexAccessor& accessor) {
         std::vector<prsr::ngrams> query_ngrams;
         prsr::parser(query, accessor.cfg, query_ngrams);
         std::vector<TermInfos> term_infos;
-        std::set<Result> result;
+        std::unordered_map<size_t, double> result;
 
         for (const auto& query_ngram : query_ngrams) {
             TermInfos term_info = accessor.get_term_infos(query_ngram.word);
@@ -83,16 +91,29 @@ namespace searcher {
                 double score = static_cast<double>(doc_info_element.second) *
                     std::log((accessor.doc_count + 1.0) /
                              static_cast<double>(vElement.doc_info.size()));
+
                 auto res_found = result.find(doc_info_element.first);
+                // std::cout<<doc_info_element.first<< " " <<score << " " <<
+                // res_found->doc_id<<std::endl;
                 if (res_found == result.end()) {
                     result.emplace(doc_info_element.first, score);
                 } else {
-                    result.erase(res_found);
-                    result.emplace(doc_info_element.first, score);
+                    res_found->second += score;
+                    std::cout << doc_info_element.first << " + " << score
+                              << std::endl;
                 }
             }
         }
-        return result;
+        std::vector<Result> vRes;
+        for (const auto& mElement : result) {
+            vRes.emplace_back(mElement.first, mElement.second);
+        }
+
+        sort(vRes.begin(), vRes.end(), stability);
+
+        sort(vRes.begin(), vRes.end(), more_by_score);
+
+        return vRes;
     }
 
 }  // namespace searcher
