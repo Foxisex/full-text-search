@@ -22,7 +22,7 @@ namespace indexer {
         prsr::config cfg;
 
        public:
-        explicit IndexBuilder(prsr::config& config) : cfg(config) {
+        explicit IndexBuilder(const prsr::config& config) : cfg(config) {
         }
 
         void add_document(const size_t document_id, const std::string& text);

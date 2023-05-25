@@ -1,7 +1,7 @@
 #include <CLI/CLI.hpp>
-#include <csv2/reader.hpp>
 #include <iostream>
 #include <libfts/indexer.hpp>
+#include <libfts/options.hpp>
 #include <libfts/parser.hpp>
 #include <libfts/searcher.hpp>
 int main(int argc, char** argv) {
@@ -29,59 +29,21 @@ int main(int argc, char** argv) {
 
         app.parse(argc, argv);
 
+        std::string index_path = std::filesystem::current_path();
+        ;
+
+        if (ind_path != ".") {
+            index_path += "/" + ind_path;
+        }
+
         if (!csv_path.empty()) {
-            csv2::Reader<
-                csv2::delimiter<','>,
-                csv2::quote_character<'"'>,
-                csv2::first_row_is_header<true>,
-                csv2::trim_policy::trim_whitespace>
-                csv;
-            std::vector<std::string> strings;
-
-            csv.mmap("books.csv");
-            for (const auto row : csv) {
-                size_t ind = 0;
-                for (const auto cell : row) {
-                    if (ind == 0 || ind == 1) {
-                        std::string value;
-                        cell.read_value(value);
-                        strings.emplace_back(value);
-                    }
-                    ind++;
-                }
-            }
-
-            indexer::IndexBuilder builder(config);
-
-            for (size_t i = 0; i < strings.size(); i += 2) {
-                builder.add_document(std::stoul(strings[i]), strings[i + 1]);
-            }
-
-            indexer::Index index = builder.index();
-            indexer::TextIndexWriter writer;
-
-            writer.write(std::filesystem::current_path(), index);
+            options::indexating(config, csv_path, index_path);
         }
 
         if (csv_path.empty() && !query.empty()) {
-            searcher::TextIndexAccessor accessor(config);
-            auto result = searcher::search(query, accessor);
-            for (const auto& resElement : result) {
-                std::cout << "doc: " << resElement.doc_id << " "
-                          << accessor.load_document(
-                                 std::to_string(resElement.doc_id))
-                          << " score: " << resElement.score << std::endl;
-            }
+            options::searching(config, query, index_path);
         } else {
-            std::getline(std::cin, query);
-            searcher::TextIndexAccessor accessor(config);
-            auto result = searcher::search(query, accessor);
-            for (const auto& resElement : result) {
-                std::cout << "doc: " << resElement.doc_id << " "
-                          << accessor.load_document(
-                                 std::to_string(resElement.doc_id))
-                          << " score: " << resElement.score << std::endl;
-            }
+            options::searching_interactive(config, index_path);
         }
 
     } catch (const std::exception& error) {
