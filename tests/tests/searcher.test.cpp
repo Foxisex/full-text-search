@@ -1,10 +1,7 @@
-#include <CLI/CLI.hpp>
-#include <iostream>
-#include <libfts/indexer.hpp>
-#include <libfts/parser.hpp>
+#include <gtest/gtest.h>
 #include <libfts/searcher.hpp>
 
-int main() {
+TEST(TestSEARCHER, test) {
     prsr::config config;
     config.stop_words = {
         "a",   "an",    "and",  "are",   "as",    "at",   "be",   "but",
@@ -18,11 +15,7 @@ int main() {
     indexer::IndexBuilder builder(config);
 
     builder.add_document(199903, "The Matrix");
-    builder.add_document(199904, "The Matrix");
-    builder.add_document(199905, "The Matrix");
-    builder.add_document(199906, "The Matrix");
-    builder.add_document(199907, "The Matrix");
-    builder.add_document(199908, "The Matrix");
+    builder.add_document(199904, "The Matrix1");
     builder.add_document(200305, "The Matrix Reloaded Matrix Matrix matrix");
     builder.add_document(200311, "The Matrix Revolution");
 
@@ -30,11 +23,30 @@ int main() {
     indexer::TextIndexWriter writer;
 
     writer.write(std::filesystem::current_path(), index);
+
     searcher::TextIndexAccessor accessor(config);
     std::string query = "Hello Matrix";
+
     auto result = searcher::search(query, accessor);
+
+    const std::vector<std::string> expected_result = {
+        "The Matrix Reloaded Matrix Matrix matrix",
+        "The Matrix",
+        "The Matrix1",
+        "The Matrix Revolution"};
+    std::vector<std::string> resVec;
+    resVec.reserve(expected_result.size());
     for (const auto& resElement : result) {
-        std::cout << "doc: " << resElement.doc_id
-                  << " score: " << resElement.score << std::endl;
+        resVec.emplace_back(
+            accessor.load_document(std::to_string(resElement.doc_id)));
     }
+    for (size_t i = 0; i < expected_result.size(); i++) {
+        ASSERT_EQ(resVec[i], expected_result[i]);
+    }
+}
+
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+
+    return RUN_ALL_TESTS();
 }

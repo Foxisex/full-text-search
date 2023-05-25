@@ -3,7 +3,8 @@ set(target_name fts)
 add_library(${target_name} STATIC
 	libfts/solver.cpp
 	libfts/parser.cpp
-	libfts/indexer.cpp)
+	libfts/indexer.cpp
+	libfts/searcher.cpp)
 	
 include(CompileOptions)
 set_compile_options(${target_name})
