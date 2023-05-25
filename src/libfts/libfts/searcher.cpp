@@ -93,14 +93,10 @@ namespace searcher {
                              static_cast<double>(vElement.doc_info.size()));
 
                 auto res_found = result.find(doc_info_element.first);
-                // std::cout<<doc_info_element.first<< " " <<score << " " <<
-                // res_found->doc_id<<std::endl;
                 if (res_found == result.end()) {
                     result.emplace(doc_info_element.first, score);
                 } else {
                     res_found->second += score;
-                    std::cout << doc_info_element.first << " + " << score
-                              << std::endl;
                 }
             }
         }
