@@ -51,7 +51,7 @@ namespace searcher {
             path = std::filesystem::current_path();
             path += "/index";
             cfg = config;
-            doc_count = stod(load_document("DocCount"));
+            doc_count = stod(load_document("_DocCount_"));
         }
     };
 

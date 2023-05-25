@@ -47,7 +47,7 @@ namespace indexer {
             file.close();
         }
 
-        file.open(path + "/index/docs/DocCount.txt");
+        file.open(path + "/index/docs/_DocCount_.txt");
         file << index.docs.size();
         file.close();
 
