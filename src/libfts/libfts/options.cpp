@@ -31,7 +31,6 @@ namespace options {
         for (size_t i = 0; i < strings.size(); i += 2) {
             builder.add_document(std::stoul(strings[i]), strings[i + 1]);
         }
-
         indexer::Index index = builder.index();
         indexer::TextIndexWriter writer;
 
@@ -42,7 +41,7 @@ namespace options {
         const prsr::config& config,
         const std::string& query,
         const std::string& index_path) {
-        searcher::TextIndexAccessor accessor(config);
+        searcher::TextIndexAccessor accessor(config, index_path);
         auto result = searcher::search(query, accessor);
         size_t count = 0;
         for (const auto& resElement : result) {
@@ -59,8 +58,8 @@ namespace options {
         const prsr::config& config,
         const std::string& index_path) {
         std::string query;
-        std::cin >> query;
-        searcher::TextIndexAccessor accessor(config);
+        searcher::TextIndexAccessor accessor(config, index_path);
+        std::getline(std::cin, query);
         auto result = searcher::search(query, accessor);
         size_t count = 0;
         for (const auto& resElement : result) {

@@ -37,8 +37,8 @@ namespace indexer {
     void TextIndexWriter::write(const std::string& path, const Index& index) {
         std::ofstream file;
 
-        std::filesystem::create_directories("index/docs");
-        std::filesystem::create_directories("index/entries");
+        std::filesystem::create_directories(path + "/index/docs");
+        std::filesystem::create_directories(path + "/index/entries");
 
         for (const auto& doc : index.docs) {
             file.open(
@@ -46,7 +46,6 @@ namespace indexer {
             file << doc.second;
             file.close();
         }
-
         file.open(path + "/index/docs/_DocCount_.txt");
         file << index.docs.size();
         file.close();

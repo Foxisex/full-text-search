@@ -15,41 +15,40 @@ int main(int argc, char** argv) {
     config.min_ngram_length = 3;
     config.max_ngram_length = 6;
 
-    try {
-        CLI::App app("Full-text search");
+    // try {
+    CLI::App app("Full-text search");
 
-        std::string csv_path;
-        std::string ind_path;
-        std::string query;
+    std::string csv_path;
+    std::string ind_path;
+    std::string query;
 
-        app.add_option("--csv", csv_path, "Path to scv file.");
-        app.add_option("--index, -i", ind_path, "Path to index lib")
-            ->required();
-        app.add_option("--query, -q", query, "Your query");
+    app.add_option("--csv", csv_path, "Path to scv file.");
+    app.add_option("--index, -i", ind_path, "Path to index lib");
+    // ->required();
+    app.add_option("--query, -q", query, "Your query");
 
-        app.parse(argc, argv);
+    app.parse(argc, argv);
 
-        std::string index_path = std::filesystem::current_path();
-        ;
+    std::string index_path = std::filesystem::current_path();
 
-        if (ind_path != ".") {
-            index_path += "/" + ind_path;
-        }
-
-        if (!csv_path.empty()) {
-            options::indexating(config, csv_path, index_path);
-        }
-
-        if (csv_path.empty() && !query.empty()) {
-            options::searching(config, query, index_path);
-        } else {
-            options::searching_interactive(config, index_path);
-        }
-
-    } catch (const std::exception& error) {
-        std::cout << error.what() << "\n";
-        return 1;
+    if (ind_path != ".") {
+        index_path += "/" + ind_path;
     }
+
+    if (!csv_path.empty()) {
+        options::indexating(config, csv_path, index_path);
+    }
+
+    if (csv_path.empty() && !query.empty()) {
+        options::searching(config, query, index_path);
+    } else if (csv_path.empty() && query.empty()) {
+        options::searching_interactive(config, index_path);
+    }
+
+    // } catch (const std::exception& error) {
+    //     std::cout << error.what() << "\n";
+    //     return 1;
+    // }
 
     return 0;
 }

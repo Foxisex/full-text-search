@@ -9,7 +9,6 @@ namespace searcher {
             return result;
         }
         std::getline(file, result);
-
         file.close();
         return result;
     }

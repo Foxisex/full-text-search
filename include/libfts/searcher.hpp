@@ -53,6 +53,12 @@ namespace searcher {
             cfg = config;
             doc_count = stod(load_document("_DocCount_"));
         }
+
+        TextIndexAccessor(prsr::config config, std::string idx_path) {
+            path = idx_path + "/index";
+            cfg = config;
+            doc_count = stod(load_document("_DocCount_"));
+        }
     };
 
     std::set<Result> search(
