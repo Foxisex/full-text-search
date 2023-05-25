@@ -101,6 +101,7 @@ namespace searcher {
             }
         }
         std::vector<Result> vRes;
+        vRes.reserve(result.size());
         for (const auto& mElement : result) {
             vRes.emplace_back(mElement.first, mElement.second);
         }
