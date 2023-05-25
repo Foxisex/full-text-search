@@ -16,5 +16,6 @@ target_link_libraries(
   PRIVATE
     fts
     CLI11
+    csv2
 )
 

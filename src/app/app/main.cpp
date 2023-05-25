@@ -1,10 +1,10 @@
 #include <CLI/CLI.hpp>
 #include <iostream>
 #include <libfts/indexer.hpp>
+#include <libfts/options.hpp>
 #include <libfts/parser.hpp>
 #include <libfts/searcher.hpp>
-
-int main() {
+int main(int argc, char** argv) {
     prsr::config config;
     config.stop_words = {
         "a",   "an",    "and",  "are",   "as",    "at",   "be",   "but",
@@ -15,26 +15,40 @@ int main() {
     config.min_ngram_length = 3;
     config.max_ngram_length = 6;
 
-    indexer::IndexBuilder builder(config);
+    try {
+        CLI::App app("Full-text search");
 
-    builder.add_document(199903, "The Matrix");
-    builder.add_document(199904, "The Matrix");
-    builder.add_document(199905, "The Matrix");
-    builder.add_document(199906, "The Matrix");
-    builder.add_document(199907, "The Matrix");
-    builder.add_document(199908, "The Matrix");
-    builder.add_document(200305, "The Matrix Reloaded Matrix Matrix matrix");
-    builder.add_document(200311, "The Matrix Revolution");
+        std::string csv_path;
+        std::string ind_path;
+        std::string query;
 
-    indexer::Index index = builder.index();
-    indexer::TextIndexWriter writer;
+        app.add_option("--csv", csv_path, "Path to scv file.");
+        app.add_option("--index, -i", ind_path, "Path to index lib")
+            ->required();
+        app.add_option("--query, -q", query, "Your query");
 
-    writer.write(std::filesystem::current_path(), index);
-    searcher::TextIndexAccessor accessor(config);
-    std::string query = "Hello Matrix";
-    auto result = searcher::search(query, accessor);
-    for (const auto& resElement : result) {
-        std::cout << "doc: " << resElement.doc_id
-                  << " score: " << resElement.score << std::endl;
+        app.parse(argc, argv);
+
+        std::string index_path = std::filesystem::current_path();
+
+        if (ind_path != ".") {
+            index_path += "/" + ind_path;
+        }
+
+        if (!csv_path.empty()) {
+            options::indexating(config, csv_path, index_path);
+        }
+
+        if (csv_path.empty() && !query.empty()) {
+            options::searching(config, query, index_path);
+        } else if (csv_path.empty() && query.empty()) {
+            options::searching_interactive(config, index_path);
+        }
+
+    } catch (const std::exception& error) {
+        std::cout << error.what() << "\n";
+        return 1;
     }
+
+    return 0;
 }
