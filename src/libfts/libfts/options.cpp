@@ -44,14 +44,20 @@ namespace options {
         const std::string& index_path) {
         searcher::TextIndexAccessor accessor(config, index_path);
         auto result = searcher::search(query, accessor);
-        size_t count = 0;
+        size_t count = 1;
+        double maxScore = 0;
+        if (!result.empty()) {
+            maxScore = result[0].score;
+        }
         for (const auto& resElement : result) {
-            std::cout << count << "\t" << resElement.score << "\t"
-                      << resElement.doc_id << "\t"
-                      << accessor.load_document(
-                             std::to_string(resElement.doc_id))
-                      << std::endl;
-            count++;
+            if (maxScore / resElement.score < 2) {
+                std::cout << count << "\t" << resElement.score << "\t"
+                          << resElement.doc_id << "\t"
+                          << accessor.load_document(
+                                 std::to_string(resElement.doc_id))
+                          << std::endl;
+                count++;
+            }
         }
     }
 
